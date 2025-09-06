@@ -22,3 +22,4 @@ EOF
 
 # make sure nothing secret is staged
 git rm --cached -r -- **/.env* 2>/dev/null || true
+/generated/prisma
