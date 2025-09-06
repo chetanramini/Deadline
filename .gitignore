@@ -1,0 +1,40 @@
+# Node/Next
+node_modules
+.next
+out
+dist
+
+# Env (any folder)
+**/.env*
+!**/.env.example
+
+# Logs
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+*.log
+
+# OS
+.DS_Store
+node_modules
+.next
+out
+dist
+# Node/Next
+node_modules
+.next
+out
+dist
+
+# Env (any folder)
+**/.env*
+!**/.env.example
+
+# Logs
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+*.log
+
+# OS
+.DS_Store
