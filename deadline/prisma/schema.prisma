@@ -7,31 +7,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum TaskStatus { PENDING DONE MISSED AT_RISK }
-enum BlockStatus { PLANNED DONE MISSED RESCHEDULED }
+enum TaskStatus {
+  PENDING
+  DONE
+  MISSED
+  AT_RISK
+}
+
+enum BlockStatus {
+  PLANNED
+  DONE
+  MISSED
+  RESCHEDULED
+}
 
 model User {
-  id        String   @id @db.VarChar(36)          // "demo-user" for M1–M4
+  id        String   @id @db.VarChar(36) // "demo-user" for M1–M4
   createdAt DateTime @default(now()) @db.Timestamptz(6)
   updatedAt DateTime @updatedAt @db.Timestamptz(6)
 
-  tasks     Task[]
+  tasks Task[]
 }
 
 model Task {
-  id          String      @id @db.VarChar(26)     // ULID
+  id          String     @id @db.VarChar(26) // ULID
   userId      String
-  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   title       String
   course      String?
   description String?
-  dueAt       DateTime    @db.Timestamptz(6)
-  estHours    Int         @db.SmallInt            // 1–40 (validated in API)
-  weight      Int         @default(3) @db.SmallInt
-  status      TaskStatus  @default(PENDING)
+  dueAt       DateTime   @db.Timestamptz(6)
+  estHours    Int        @db.SmallInt // 1–40 (validated in API)
+  weight      Int        @default(3) @db.SmallInt
+  status      TaskStatus @default(PENDING)
   blocks      Block[]
-  createdAt   DateTime    @default(now()) @db.Timestamptz(6)
-  updatedAt   DateTime    @updatedAt @db.Timestamptz(6)
+  createdAt   DateTime   @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime   @updatedAt @db.Timestamptz(6)
 
   @@index([userId, dueAt])
   @@index([userId, status, dueAt])
@@ -39,7 +50,7 @@ model Task {
 }
 
 model Block {
-  id        String      @id @db.VarChar(26)       // ULID
+  id        String      @id @db.VarChar(26) // ULID
   taskId    String
   task      Task        @relation(fields: [taskId], references: [id], onDelete: Cascade)
   start     DateTime    @db.Timestamptz(6)
