@@ -2,25 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import { ulid } from "ulid";
+import { CreateTaskInputSchema } from "@/src/lib/types";
 
 const prisma = new PrismaClient();
-
-// helper: ISO date string check
-const isIsoDateTime = (s: string) => !Number.isNaN(Date.parse(s));
-
-const createTaskSchema = z.object({
-  title: z.string().min(1).max(120),
-  dueAt: z.string().refine(isIsoDateTime, { message: "dueAt must be an ISO datetime string" }),
-  estHours: z.number().int().min(1).max(40),
-  course: z.string().max(40).optional(),
-  description: z.string().max(500).optional(),
-  weight: z.number().int().min(1).max(5).default(1),
-});
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const parsed = createTaskSchema.parse(body);
+    const parsed = CreateTaskInputSchema.parse(body);
 
     const dueAtDate = new Date(parsed.dueAt);
     const now = new Date();
