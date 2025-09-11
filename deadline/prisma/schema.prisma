@@ -62,3 +62,12 @@ model Block {
   @@index([taskId])
   @@index([start, end])
 }
+
+model Preferences {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  workStart Int // 0..23
+  workEnd   Int // 0..23
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+}
