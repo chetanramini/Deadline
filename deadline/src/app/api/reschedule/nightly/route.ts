@@ -157,9 +157,11 @@ export async function POST() {
     orderBy: { dueAt: "asc" },
   });
 
+  const runAt = new Date().toISOString();
   let tasksEvaluated = 0;
   let tasksUpdated = 0;
   let blocksCreated = 0;
+  let atRiskTasks = 0; 
 
   for (const t of tasks) {
     tasksEvaluated++;
@@ -170,6 +172,7 @@ export async function POST() {
       if (t.status !== "AT_RISK") {
         await prisma.task.update({ where: { id: t.id }, data: { status: "AT_RISK" } });
       }
+      atRiskTasks++;
       continue;
     }
 
@@ -192,6 +195,7 @@ export async function POST() {
       if (t.status !== "AT_RISK") {
         await prisma.task.update({ where: { id: t.id }, data: { status: "AT_RISK" } });
       }
+      atRiskTasks++;
       continue;
     }
 
@@ -229,9 +233,13 @@ export async function POST() {
   }
 
   return NextResponse.json({
-    ok: true,
-    tasksEvaluated,
-    tasksUpdated,
-    blocksCreated,
-  });
+  ok: true,
+  runAt,                            // legacy support
+  tasksEvaluated,
+  tasksUpdated,
+  blocksCreated,
+  movedBlocks: blocksCreated,       // legacy support
+  affectedTasks: tasksUpdated,      // legacy support
+  atRiskTasks                       // legacy support
+});
 }
